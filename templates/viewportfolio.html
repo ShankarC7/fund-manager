@@ -1,0 +1,91 @@
+{% include 'header.html' %} 
+
+{% block 'main' %}
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6">
+                              <h3 class="fw-bold">Charts of Portfolio</h3>
+                                  <p class="small text-muted mb-0">see distributed data of your spending and investment.</p>
+                            </div>
+                                <div>
+                                  <canvas id="myChart"></canvas>
+  
+                                  </div>
+                                  
+                                  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                                  
+                                <script>
+                                    const ctx = document.getElementById('myChart');
+                                  
+                                    new Chart(ctx, {
+                                      type: 'pie',
+                                      data: {
+                                        labels: [{% for details in det %} 'spending, investments, savings', {% endfor %}],
+                                        datasets: [{
+                                          label: '# of amount',
+                                          data: [{{sav}}, {{exp}}, {{inv}}],
+                                          borderWidth: 1
+                                        }]
+                                      },
+                                      options: {
+                                        scales: {
+                                          y: {
+                                            beginAtZero: true
+                                          }
+                                        }
+                                      }
+                                    });
+                                </script>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-lg-6 mb-4">
+                <div class="card border-0 shadow-sm rounded">
+                    <div class="card-body p-4">
+                        <div class="row align-items-center">
+                          <h3 class="fw-bold">Try to see Portfolio</h3>
+                          <form method="POST" action="/viewport">
+                            {% csrf_token %}
+                            {% for details in det %}
+                            <div class="mb-3">
+                              <label  class="form-label">Your Name:</label>
+                              <h3 class="fw-bold">Welcome, {{det.name}}</h3>
+                             
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label">Your Total Income:</label>
+                              <h3 class="fw-bold">{{details.Income}}</h3>
+                              <div id="note" class="form-text">We'll never share your details, anywhere else.</div>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label">Your Savings:</label>
+                              <h3 class="fw-bold">{{sav}}, {{details.id.savings}}</h3>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label">Your Investments:</label>
+                              <h3 class="fw-bold">{{inv}}, {{details.id.investment}}</h3>
+                            </div>
+                            <div class="mb-3">
+                              <label  class="form-label">Your Spendings:</label>
+                              <h3 class="fw-bold">{{exp}}, {{details.id.expenses}}</h3>
+                            </div>
+                            {% endfor %}
+                          </form>
+                        </div>
+                      </div>
+                  </div>
+              </div>
+    </section>
+  
+                 
+
+
+{% endblock 'main' %}
+
+{% include 'footer.html' %}
